@@ -25,6 +25,7 @@ type ConfigData struct {
 	ServerPort int    `json:"server_port"`
 	ServerHost string `json:"server_host"`
 	Google     struct {
+		Rate         int    `json:"rate"`
 		ClientId     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"google"`
