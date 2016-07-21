@@ -42,3 +42,43 @@ func HueSetup() (err error) {
 
 	return
 }
+
+func HueLights() (err error) {
+	err = initConfig()
+	if err != nil {
+		return
+	}
+
+	he := hue.Hue{
+		Host:     config.Config.Host,
+		Username: config.Config.Username,
+	}
+
+	lights, err := he.GetLights()
+	if err != nil {
+		return
+	}
+
+	lightIds := []string{}
+
+	for _, light := range lights {
+		confirm := ""
+
+		fmt.Printf("Add %s (%s)? [y/N] ", light.Name, light.Type)
+		fmt.Scanln(&confirm)
+
+		if strings.HasPrefix(strings.ToLower(confirm), "y") {
+			fmt.Printf("Light '%s' has been added...\n", light.Name)
+			lightIds = append(lightIds, light.UniqueId)
+		}
+	}
+
+	config.Config.Lights = lightIds
+
+	err = config.Save()
+	if err != nil {
+		return
+	}
+
+	return
+}
