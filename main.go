@@ -23,8 +23,8 @@ func main() {
 		err = cmd.Accounts()
 	case "account-remove":
 		err = cmd.AccountRemove(flag.Arg(1), flag.Arg(2))
-	case "alert":
-		err = cmd.Alert()
+	case "start":
+		err = cmd.Start()
 	}
 
 	if err != nil {
