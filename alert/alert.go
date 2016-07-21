@@ -24,8 +24,8 @@ func (a *Alert) runner() (err error) {
 	}
 
 	a.notf = &notification.Notification{
-		Transition: 500 * time.Millisecond,
-		Rate:       500 * time.Millisecond,
+		Transition: 300 * time.Millisecond,
+		Rate:       1500 * time.Millisecond,
 	}
 	defer func() {
 		if a.notf != nil {
@@ -89,9 +89,9 @@ func (a *Alert) runner() (err error) {
 				color := ""
 
 				if acct.Type == "google" {
-					color = "#dd4c40"
+					color = "#f00"
 				} else {
-					color = "#4d394b"
+					color = "#0f0"
 				}
 
 				alrt := notification.Alert{
