@@ -47,11 +47,12 @@ type lightData struct {
 		Mode        string    `json:"colormode"`
 		Reachable   bool      `json:"reachabe"`
 	} `json:"state"`
-	Type    string `json:"type"`
-	Name    string `json:"name"`
-	ModeLid string `json:"modelid"`
-	Version string `json:"swversion"`
-	Error   struct {
+	Type     string `json:"type"`
+	Name     string `json:"name"`
+	ModeLid  string `json:"modelid"`
+	Version  string `json:"swversion"`
+	UniqueId string `json:"uniqueid"`
+	Error    struct {
 		Type        int    `json:"type"`
 		Address     string `json:"address"`
 		Description string `json:"description"`
@@ -60,6 +61,7 @@ type lightData struct {
 
 type Light struct {
 	Id          string
+	UniqueId    string
 	Name        string
 	Type        string
 	State       bool
@@ -261,6 +263,7 @@ func (l *Light) Update() (err error) {
 		colorY = data.State.ColorXY[1]
 	}
 
+	l.UniqueId = data.UniqueId
 	l.Name = data.Name
 	l.Type = data.Type
 	l.State = data.State.On

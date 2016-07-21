@@ -59,6 +59,7 @@ func (h *Hue) GetLights() (lights []*Light, err error) {
 
 		lights = append(lights, &Light{
 			Id:          id,
+			UniqueId:    data.UniqueId,
 			Name:        data.Name,
 			Type:        data.Type,
 			State:       data.State.On,
@@ -75,6 +76,28 @@ func (h *Hue) GetLights() (lights []*Light, err error) {
 			hue:         h,
 			changed:     set.NewSet(),
 		})
+	}
+
+	return
+}
+
+func (h *Hue) GetLightsById(lightIds []string) (lights []*Light, err error) {
+	lights = []*Light{}
+	lightIdsSet := set.NewSet()
+
+	for _, lightId := range lightIds {
+		lightIdsSet.Add(lightId)
+	}
+
+	allLights, err := h.GetLights()
+	if err != nil {
+		return
+	}
+
+	for _, light := range allLights {
+		if lightIdsSet.Contains(light.UniqueId) {
+			lights = append(lights, light)
+		}
 	}
 
 	return
