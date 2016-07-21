@@ -21,17 +21,6 @@ func Accounts() (err error) {
 
 	for _, acct := range accts {
 		fmt.Printf("%s: %s\n", acct.Type, acct.Identity)
-
-		client, e := acct.GetClient()
-		if e != nil {
-			err = e
-			return
-		}
-
-		err = client.Sync()
-		if err != nil {
-			return
-		}
 	}
 
 	return
