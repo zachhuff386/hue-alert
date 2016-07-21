@@ -58,5 +58,5 @@ func callbackGet(c *gin.Context) {
 
 	account.Authenticated <- true
 
-	c.String(200, "Account has been added")
+	c.String(200, "Account successfully added")
 }
