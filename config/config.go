@@ -49,6 +49,20 @@ func (c *ConfigData) CommitAccount(acct *account.Account) (err error) {
 	return
 }
 
+func (c *ConfigData) RemoveAccount(acctId string) (ok bool, err error) {
+	_, ok = c.Accounts[acctId]
+	if ok {
+		delete(c.Accounts, acctId)
+	}
+
+	err = Save()
+	if err != nil {
+		return
+	}
+
+	return
+}
+
 func Load() (err error) {
 	_, err = os.Stat(filename)
 	if err != nil {
