@@ -16,15 +16,15 @@ var (
 	googleConf *oauth.Oauth2
 )
 
-type GooglelClient struct {
+type GoogleClient struct {
 	acct *account.Account
 }
 
-func (g *GooglelClient) SetAccount(acct *account.Account) {
+func (g *GoogleClient) SetAccount(acct *account.Account) {
 	g.acct = acct
 }
 
-func (g *GooglelClient) Update() (err error) {
+func (g *GoogleClient) Update() (err error) {
 	client := googleConf.NewClient(g.acct)
 
 	err = client.Refresh()
@@ -52,7 +52,7 @@ func (g *GooglelClient) Update() (err error) {
 	return
 }
 
-func (g *GooglelClient) Sync() (err error) {
+func (g *GoogleClient) Sync() (err error) {
 	client := googleConf.NewClient(g.acct)
 
 	err = client.Refresh()
@@ -126,5 +126,5 @@ func googleInit() {
 }
 
 func init() {
-	account.Register(google, Oauth2, GoogleAuth{}, GooglelClient{}, googleInit)
+	account.Register(google, Oauth2, GoogleAuth{}, GoogleClient{}, googleInit)
 }
