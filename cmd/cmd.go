@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/zachhuff386/hue-alert/config"
 	"github.com/zachhuff386/hue-alert/hue"
 	"github.com/zachhuff386/hue-alert/logger"
@@ -15,22 +14,6 @@ func initConfig() (err error) {
 		return
 	}
 
-	if config.Config.Host == "" {
-		host := ""
-
-		fmt.Print("Enter host: ")
-		fmt.Scanln(&host)
-
-		config.Config.Host = host
-
-		err = config.Save()
-		if err != nil {
-			return
-		}
-		return
-	}
-
-	// TODO
 	err = config.Save()
 	if err != nil {
 		return
