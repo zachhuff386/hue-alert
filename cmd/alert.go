@@ -29,8 +29,6 @@ func Start() (err error) {
 		Rate:   5 * time.Second,
 	}
 
-	alrt.Run()
-
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt)
 	signal.Notify(sig, syscall.SIGTERM)
@@ -40,9 +38,7 @@ func Start() (err error) {
 		os.Exit(1)
 	}()
 
-	for {
-		time.Sleep(1 * time.Minute)
-	}
+	alrt.Run()
 
 	return
 }
