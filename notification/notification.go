@@ -71,6 +71,7 @@ func (n *Notification) runner() (err error) {
 	for {
 		if len(n.alerts) == 0 {
 			time.Sleep(50 * time.Millisecond)
+			continue
 		}
 
 		alerts := []Alert{}
