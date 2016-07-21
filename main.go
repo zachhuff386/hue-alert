@@ -19,6 +19,10 @@ func main() {
 		err = cmd.GoogleAdd()
 	case "google-setup":
 		err = cmd.GoogleSetup()
+	case "slack-add":
+		err = cmd.SlackAdd()
+	case "slack-setup":
+		err = cmd.SlackSetup()
 	case "accounts":
 		err = cmd.Accounts()
 	case "account-remove":

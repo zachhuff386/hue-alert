@@ -30,6 +30,11 @@ type ConfigData struct {
 		ClientId     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"google"`
+	Slack struct {
+		Rate         int    `json:"rate"`
+		ClientId     string `json:"client_id"`
+		ClientSecret string `json:"client_secret"`
+	} `json:"slack"`
 	Accounts map[string]*account.Account `json:"accounts"`
 }
 
