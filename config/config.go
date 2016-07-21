@@ -19,11 +19,12 @@ const (
 var Config = &ConfigData{}
 
 type ConfigData struct {
-	Host       string `json:"host"`
-	Username   string `json:"username"`
-	LogPath    string `json:"log_path"`
-	ServerPort int    `json:"server_port"`
-	ServerHost string `json:"server_host"`
+	Host       string   `json:"host"`
+	Username   string   `json:"username"`
+	Lights     []string `json:"lights"`
+	LogPath    string   `json:"log_path"`
+	ServerPort int      `json:"server_port"`
+	ServerHost string   `json:"server_host"`
 	Google     struct {
 		Rate         int    `json:"rate"`
 		ClientId     string `json:"client_id"`
@@ -90,6 +91,10 @@ func Load() (err error) {
 			errors.Wrap(err, "config: File unmarshal error"),
 		}
 		return
+	}
+
+	if Config.Lights == nil {
+		Config.Lights = []string{}
 	}
 
 	if Config.LogPath == "" {
