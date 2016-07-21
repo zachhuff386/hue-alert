@@ -3,6 +3,7 @@ package alert
 import (
 	"github.com/Sirupsen/logrus"
 	"github.com/zachhuff386/hue-alert/accounts"
+	"github.com/zachhuff386/hue-alert/config"
 	"github.com/zachhuff386/hue-alert/hue"
 	"github.com/zachhuff386/hue-alert/notification"
 	"time"
@@ -45,6 +46,24 @@ func (a *Alert) runner() (err error) {
 
 	alerts := map[string]notification.Alert{}
 
+	for _, acct := range accts {
+		client, e := acct.GetClient()
+		if e != nil {
+			err = e
+			return
+		}
+
+		err = client.Update()
+		if err != nil {
+			return
+		}
+
+		err = config.Config.CommitAccount(acct)
+		if err != nil {
+			return
+		}
+	}
+
 	for {
 		for _, acct := range accts {
 			client, e := acct.GetClient()
@@ -61,10 +80,23 @@ func (a *Alert) runner() (err error) {
 				}).Error("alert: Error checking account")
 			}
 
+			err = config.Config.CommitAccount(acct)
+			if err != nil {
+				return
+			}
+
 			if acct.Alert {
+				color := ""
+
+				if acct.Type == "google" {
+					color = "#dd4c40"
+				} else {
+					color = "#4d394b"
+				}
+
 				alrt := notification.Alert{
-					Type:     "google",
-					Color:    "#dd4c40",
+					Type:     acct.Type,
+					Color:    color,
 					Duration: 500 * time.Millisecond,
 				}
 				alerts[acct.Id] = alrt
