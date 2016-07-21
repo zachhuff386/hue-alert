@@ -1,0 +1,111 @@
+package alert
+
+import (
+	"github.com/Sirupsen/logrus"
+	"github.com/zachhuff386/hue-alert/accounts"
+	"github.com/zachhuff386/hue-alert/hue"
+	"github.com/zachhuff386/hue-alert/notification"
+	"time"
+)
+
+type Alert struct {
+	interrupt bool
+	notf      *notification.Notification
+	Hue       *hue.Hue
+	Lights    []string
+	Rate      time.Duration
+}
+
+func (a *Alert) runner() (err error) {
+	lights, err := a.Hue.GetLightsById(a.Lights)
+	if err != nil {
+		return
+	}
+
+	a.notf = &notification.Notification{
+		Transition: 500 * time.Millisecond,
+		Rate:       500 * time.Millisecond,
+	}
+	defer func() {
+		if a.notf != nil {
+			a.notf.Stop()
+		}
+	}()
+
+	for _, light := range lights {
+		a.notf.AddLight(light)
+	}
+
+	go a.notf.Run()
+
+	accts, err := accounts.GetAccounts()
+	if err != nil {
+		return
+	}
+
+	alerts := map[string]notification.Alert{}
+
+	for {
+		for _, acct := range accts {
+			client, e := acct.GetClient()
+			if e != nil {
+				err = e
+				return
+			}
+
+			err = client.Sync()
+			if err != nil {
+				acct.Alert = false
+				logrus.WithFields(logrus.Fields{
+					"error": err,
+				}).Error("alert: Error checking account")
+			}
+
+			if acct.Alert {
+				alrt := notification.Alert{
+					Type:     "google",
+					Color:    "#dd4c40",
+					Duration: 500 * time.Millisecond,
+				}
+				alerts[acct.Id] = alrt
+				a.notf.AddAlert(alrt)
+			} else {
+				alrt, ok := alerts[acct.Id]
+				if ok {
+					a.notf.RemoveAlert(alrt)
+					delete(alerts, acct.Id)
+				}
+			}
+		}
+
+		time.Sleep(a.Rate)
+
+		if a.interrupt {
+			return
+		}
+	}
+}
+
+func (a *Alert) Run() {
+	for {
+		err := a.runner()
+		if err != nil {
+			logrus.WithFields(logrus.Fields{
+				"error": err,
+			}).Error("alert: Error in runner")
+		}
+
+		if a.interrupt {
+			return
+		}
+
+		time.Sleep(1 * time.Second)
+	}
+}
+
+func (a *Alert) Stop() {
+	a.interrupt = true
+	if a.notf != nil {
+		a.notf.Stop()
+	}
+}
