@@ -1,7 +1,9 @@
 package utils
 
 import (
-	"math/rand"
+	"crypto/rand"
+	"math/big"
+	mathrand "math/rand"
 )
 
 var (
@@ -12,7 +14,7 @@ var (
 func RandStr(n int) (str string) {
 	strList := make([]rune, n)
 	for i := range strList {
-		strList[i] = chars[rand.Intn(len(chars))]
+		strList[i] = chars[mathrand.Intn(len(chars))]
 	}
 	str = string(strList)
 	return
@@ -36,4 +38,13 @@ func Escape(s string) string {
 		}
 	}
 	return string(t)
+}
+
+func init() {
+	n, err := rand.Int(rand.Reader, big.NewInt(9223372036854775806))
+	if err != nil {
+		panic(err)
+	}
+
+	mathrand.Seed(n.Int64())
 }
