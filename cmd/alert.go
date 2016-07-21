@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"github.com/zachhuff386/hue-alert/config"
+	"github.com/zachhuff386/hue-alert/hue"
 	"github.com/zachhuff386/hue-alert/notification"
 	"os"
 	"os/signal"
@@ -14,9 +16,9 @@ func Alert() (err error) {
 		return
 	}
 
-	he, err := initHue()
-	if err != nil {
-		return
+	he := hue.Hue{
+		Host:     config.Config.Host,
+		Username: config.Config.Username,
 	}
 
 	lights, err := he.GetLights()
