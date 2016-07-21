@@ -37,6 +37,15 @@ func (n *Notification) AddAlert(alert Alert) {
 	n.alertsLock.Unlock()
 }
 
+func (n *Notification) RemoveAlert(alert Alert) {
+	n.alertsLock.Lock()
+	_, ok := n.alerts[alert.Type]
+	if ok {
+		delete(n.alerts, alert.Type)
+	}
+	n.alertsLock.Unlock()
+}
+
 func (n *Notification) AddLight(light *hue.Light) {
 	n.lightsLock.Lock()
 	if n.lights == nil {
