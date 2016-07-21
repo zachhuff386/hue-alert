@@ -11,12 +11,18 @@ func main() {
 	var err error
 
 	switch flag.Arg(0) {
-	case "google":
-		err = cmd.Google()
+	case "hue-setup":
+		err = cmd.HueSetup()
+	case "google-add":
+		err = cmd.GoogleAdd()
+	case "google-setup":
+		err = cmd.GoogleSetup()
 	case "accounts":
 		err = cmd.Accounts()
-	case "remove":
-		err = cmd.Remove(flag.Arg(1), flag.Arg(2))
+	case "account-remove":
+		err = cmd.AccountRemove(flag.Arg(1), flag.Arg(2))
+	case "alert":
+		err = cmd.Alert()
 	}
 
 	if err != nil {
