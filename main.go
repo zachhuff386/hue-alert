@@ -13,6 +13,8 @@ func main() {
 	switch flag.Arg(0) {
 	case "hue-setup":
 		err = cmd.HueSetup()
+	case "hue-lights":
+		err = cmd.HueLights()
 	case "google-add":
 		err = cmd.GoogleAdd()
 	case "google-setup":
