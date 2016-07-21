@@ -49,9 +49,9 @@ func HueLights() (err error) {
 		return
 	}
 
-	he := hue.Hue{
-		Host:     config.Config.Host,
-		Username: config.Config.Username,
+	he := initHue()
+	if he == nil {
+		return
 	}
 
 	lights, err := he.GetLights()
