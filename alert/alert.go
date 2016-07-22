@@ -111,10 +111,15 @@ func (a *Alert) runner() (err error) {
 			}
 		}
 
-		time.Sleep(a.Rate)
-
-		if a.interrupt {
-			return
+		start := time.Now()
+		for {
+			time.Sleep(50 * time.Millisecond)
+			if a.interrupt {
+				return
+			}
+			if time.Since(start) >= a.Rate {
+				break
+			}
 		}
 	}
 }
