@@ -27,7 +27,7 @@ func Start() (err error) {
 	alrt := &alert.Alert{
 		Hue:        he,
 		Lights:     config.Config.Lights,
-		Rate:       5 * time.Second,
+		Rate:       time.Duration(config.Config.UpdateRate) * time.Second,
 		Mode:       constants.Solid,
 		Brightness: config.Config.Brightness,
 	}
