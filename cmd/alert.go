@@ -4,6 +4,7 @@ import (
 	"github.com/zachhuff386/hue-alert/account"
 	"github.com/zachhuff386/hue-alert/alert"
 	"github.com/zachhuff386/hue-alert/config"
+	"github.com/zachhuff386/hue-alert/constants"
 	"os"
 	"os/signal"
 	"syscall"
@@ -23,10 +24,12 @@ func Start() (err error) {
 
 	account.InitAccounts()
 
-	alrt := alert.Alert{
-		Hue:    he,
-		Lights: config.Config.Lights,
-		Rate:   5 * time.Second,
+	alrt := &alert.Alert{
+		Hue:        he,
+		Lights:     config.Config.Lights,
+		Rate:       5 * time.Second,
+		Mode:       constants.Solid,
+		Brightness: config.Config.Brightness,
 	}
 
 	sig := make(chan os.Signal, 1)
