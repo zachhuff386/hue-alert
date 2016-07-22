@@ -10,11 +10,13 @@ import (
 )
 
 type Alert struct {
-	interrupt bool
-	notf      *notification.Notification
-	Hue       *hue.Hue
-	Lights    []string
-	Rate      time.Duration
+	interrupt  bool
+	notf       *notification.Notification
+	Hue        *hue.Hue
+	Lights     []string
+	Brightness int
+	Rate       time.Duration
+	Mode       string
 }
 
 func (a *Alert) runner() (err error) {
@@ -24,8 +26,8 @@ func (a *Alert) runner() (err error) {
 	}
 
 	a.notf = &notification.Notification{
-		Transition: 300 * time.Millisecond,
-		Rate:       1500 * time.Millisecond,
+		Mode:       a.Mode,
+		Brightness: a.Brightness,
 	}
 	defer func() {
 		if a.notf != nil {
@@ -95,9 +97,8 @@ func (a *Alert) runner() (err error) {
 				}
 
 				alrt := notification.Alert{
-					Type:     acct.Type,
-					Color:    color,
-					Duration: 500 * time.Millisecond,
+					Type:  acct.Type,
+					Color: color,
 				}
 				alerts[acct.Id] = alrt
 				a.notf.AddAlert(alrt)
