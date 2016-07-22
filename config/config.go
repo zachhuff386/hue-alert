@@ -16,6 +16,7 @@ const (
 	serverPortDefault = 9300
 	serverHostDefault = "localhost"
 	brightnessDefault = 254
+	updateRateDefault = 60
 )
 
 var Config = &ConfigData{}
@@ -31,13 +32,12 @@ type ConfigData struct {
 	ServerHost string   `json:"server_host"`
 	Mode       string   `json:"mode"`
 	Brightness int      `json:"brightness"`
+	UpdateRate int      `json:"update_rate"`
 	Google     struct {
-		Rate         int    `json:"rate"`
 		ClientId     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"google"`
 	Slack struct {
-		Rate         int    `json:"rate"`
 		ClientId     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"slack"`
@@ -105,6 +105,10 @@ func (c *ConfigData) Load(path string) (err error) {
 		c.Brightness = 254
 	} else if c.Brightness < 1 {
 		c.Brightness = 1
+	}
+
+	if c.UpdateRate == 0 {
+		c.UpdateRate = updateRateDefault
 	}
 
 	c.loaded = true
