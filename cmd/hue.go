@@ -27,7 +27,7 @@ func HueSetup() (err error) {
 	}
 
 	fmt.Print(
-		"Press the link button on top of the Hue Bridge then press enter...")
+		"Press the link button on top of the Hue bridge then press enter...")
 	fmt.Scanln()
 
 	err = he.Register()
@@ -41,6 +41,8 @@ func HueSetup() (err error) {
 	if err != nil {
 		return
 	}
+
+	fmt.Println("Hue successfully linked")
 
 	return
 }
