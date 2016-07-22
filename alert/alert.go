@@ -91,9 +91,9 @@ func (a *Alert) runner() (err error) {
 				color := ""
 
 				if acct.Type == "google" {
-					color = "#f00"
+					color = "#338620"
 				} else {
-					color = "#0f0"
+					color = "#00ccff"
 				}
 
 				alrt := notification.Alert{
