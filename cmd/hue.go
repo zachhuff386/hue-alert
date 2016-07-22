@@ -3,8 +3,10 @@ package cmd
 import (
 	"fmt"
 	"github.com/zachhuff386/hue-alert/config"
+	"github.com/zachhuff386/hue-alert/constants"
 	"github.com/zachhuff386/hue-alert/hue"
 	"strings"
+	"time"
 )
 
 func HueSetup() (err error) {
@@ -74,6 +76,34 @@ func HueLights() (err error) {
 	}
 
 	config.Config.Lights = lightIds
+
+	for {
+		brightness := 0
+
+		fmt.Print("Enter alert light brightness: [1-254] ")
+		fmt.Scanln(&brightness)
+
+		if brightness >= 1 && brightness <= 254 {
+			config.Config.Brightness = brightness
+			break
+		}
+
+		fmt.Println("Brightness is invalid...")
+	}
+
+	for {
+		mode := ""
+
+		fmt.Print("Enter alert light mode: [solid,slow,medium,fast] ")
+		fmt.Scanln(&mode)
+
+		if constants.Modes.Contains(mode) {
+			config.Config.Mode = mode
+			break
+		}
+
+		fmt.Println("Mode is invalid...")
+	}
 
 	err = config.Save()
 	if err != nil {
