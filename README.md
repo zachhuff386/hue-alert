@@ -24,7 +24,7 @@ javascript origins* and `http://localhost:9300/callback/google` for the
 [Slack Create App](https://api.slack.com/apps/new)
 
 For Slack set the name and descriptions to `Hue Alert`. Then enter
-`http://localhost:9300/callback/google` for the *Redirect URI(s)*.
+`http://localhost:9300/callback/slack` for the *Redirect URI(s)*.
 
 ## Hue setup
 
