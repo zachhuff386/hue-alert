@@ -2,6 +2,7 @@ package notification
 
 import (
 	"github.com/Sirupsen/logrus"
+	"github.com/zachhuff386/hue-alert/constants"
 	"github.com/zachhuff386/hue-alert/hue"
 	"sync"
 	"time"
@@ -12,9 +13,8 @@ var (
 )
 
 type Alert struct {
-	Type     string
-	Color    string
-	Duration time.Duration
+	Type  string
+	Color string
 }
 
 type Notification struct {
@@ -24,8 +24,8 @@ type Notification struct {
 	alertsLock    sync.Mutex
 	lights        []*hue.Light
 	lightsLock    sync.Mutex
-	Transition    time.Duration
-	Rate          time.Duration
+	Mode          string
+	Brightness    int
 }
 
 func (n *Notification) AddAlert(alert Alert) {
@@ -56,38 +56,83 @@ func (n *Notification) AddLight(light *hue.Light) {
 }
 
 func (n *Notification) runner() (err error) {
+	var transition time.Duration
+	var duration time.Duration
+	var rate time.Duration
+
+	switch n.Mode {
+	case constants.Solid:
+		transition = 500 * time.Millisecond
+		duration = 2000 * time.Millisecond
+	case constants.Slow:
+		transition = 500 * time.Millisecond
+		duration = 1500 * time.Millisecond
+		rate = 1500 * time.Millisecond
+	case constants.Medium:
+		transition = 500 * time.Millisecond
+		duration = 750 * time.Millisecond
+		rate = 750 * time.Millisecond
+	case constants.Fast:
+		transition = 250 * time.Millisecond
+		duration = 400 * time.Millisecond
+		rate = 400 * time.Millisecond
+	}
+
+	orig := true
 	origColorX := []float64{}
 	origColorY := []float64{}
 	origState := []bool{}
 	origBrightness := []int{}
 
+	lights := []*hue.Light{}
+
+	n.lightsLock.Lock()
 	for _, light := range n.lights {
+		lights = append(lights, light)
 		origColorX = append(origColorX, light.ColorX)
 		origColorY = append(origColorY, light.ColorY)
 		origState = append(origState, light.State)
 		origBrightness = append(origBrightness, light.Brightness)
 	}
+	n.lightsLock.Unlock()
+
+	var reset = func() {
+		for i, light := range lights {
+			light.SetState(origState[i])
+			if origState[i] {
+				light.SetBrightness(origBrightness[i])
+				light.SetColorXY(origColorX[i], origColorY[i])
+			}
+			light.SetTransition(transition)
+
+			err = light.Commit()
+			if err != nil {
+				return
+			}
+		}
+		time.Sleep(transition + wait)
+	}
+	defer reset()
 
 	for {
 		if len(n.alerts) == 0 {
+			if n.Mode == constants.Solid && !orig {
+				orig = true
+				reset()
+			}
 			time.Sleep(50 * time.Millisecond)
 			continue
+		} else if n.Mode == constants.Solid {
+			orig = false
 		}
 
 		alerts := []Alert{}
-		lights := []*hue.Light{}
 
 		n.alertsLock.Lock()
 		for _, alert := range n.alerts {
 			alerts = append(alerts, alert)
 		}
 		n.alertsLock.Unlock()
-
-		n.lightsLock.Lock()
-		for _, light := range n.lights {
-			lights = append(lights, light)
-		}
-		n.lightsLock.Unlock()
 
 		for _, light := range lights {
 			err = light.Update()
@@ -101,33 +146,27 @@ func (n *Notification) runner() (err error) {
 				light.SetState(true)
 				light.SetBrightness(254)
 				light.SetColorHex(alert.Color)
-				light.SetTransition(n.Transition)
+				light.SetTransition(transition)
 
 				err = light.Commit()
 				if err != nil {
 					return
 				}
 			}
-			time.Sleep(n.Transition + wait + alert.Duration)
+			time.Sleep(transition + wait + duration)
 		}
 
-		for i, light := range lights {
-			light.SetState(origState[i])
-			light.SetBrightness(origBrightness[i])
-			light.SetColorXY(origColorX[i], origColorY[i])
-			light.SetTransition(n.Transition)
-
-			err = light.Commit()
-			if err != nil {
-				return
-			}
+		if n.Mode != constants.Solid {
+			reset()
 		}
 
 		if n.interrupt {
 			return
 		}
 
-		time.Sleep(n.Rate)
+		if n.Mode != constants.Solid {
+			time.Sleep(rate)
+		}
 
 		if n.interrupt {
 			return
