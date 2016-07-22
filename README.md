@@ -5,6 +5,10 @@ Simple and secure notification system for
 using Oauth for authentication. All authentication credentials are stored
 locally and authentication is done using Oauth without any third-party servers.
 
+## Install
+
+Install and setup Go then run `go get github.com/zachhuff386/hue-alert`
+
 ## Create Oauth API keys
 
 Google and Slack Oauth API keys will be needed to authenticate with Oauth. This
