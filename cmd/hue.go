@@ -112,3 +112,38 @@ func HueLights() (err error) {
 
 	return
 }
+
+func HueColor(color string) (err error) {
+	err = initConfig()
+	if err != nil {
+		return
+	}
+
+	he := initHue()
+	if he == nil {
+		return
+	}
+
+	lights, err := he.GetLightsById(config.Config.Lights)
+	if err != nil {
+		return
+	}
+
+	if !strings.HasPrefix(color, "#") {
+		color = "#" + color
+	}
+
+	for _, light := range lights {
+		light.SetState(true)
+		light.SetBrightness(254)
+		light.SetColorHex(color)
+		light.SetTransition(500 * time.Millisecond)
+
+		err = light.Commit()
+		if err != nil {
+			return
+		}
+	}
+
+	return
+}
