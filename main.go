@@ -3,9 +3,13 @@ package main
 import (
 	"flag"
 	"github.com/zachhuff386/hue-alert/cmd"
+	"net/http"
+	"time"
 )
 
 func main() {
+	http.DefaultClient.Timeout = 3 * time.Second
+
 	flag.Parse()
 
 	var err error
