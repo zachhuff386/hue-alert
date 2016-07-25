@@ -73,7 +73,7 @@ Slack account successfully authenticated
 
 ## Test
 
-Running the command `hue-alert hue-color f00` should set the color of the
+Running the command `hue-alert hue-test f00` should set the color of the
 selected lights to red.
 
 ## Start hue-alert
