@@ -115,7 +115,7 @@ func HueLights() (err error) {
 	return
 }
 
-func HueColor(color string) (err error) {
+func HueTest(color string) (err error) {
 	err = initConfig()
 	if err != nil {
 		return

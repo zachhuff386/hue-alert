@@ -19,8 +19,8 @@ func main() {
 		err = cmd.HueSetup()
 	case "hue-lights":
 		err = cmd.HueLights()
-	case "hue-color":
-		err = cmd.HueColor(flag.Arg(1))
+	case "hue-test":
+		err = cmd.HueTest(flag.Arg(1))
 	case "google-add":
 		err = cmd.GoogleAdd()
 	case "google-setup":
