@@ -50,6 +50,10 @@ func (a *Account) GetClient() (client Client, err error) {
 	return
 }
 
+func (a *Account) GetColor() string {
+	return colorRegistry[a.Type]
+}
+
 func GetAuth(acctType string) (auth Auth, authTyp int, err error) {
 	typ, ok := authRegistry[acctType]
 	if !ok {

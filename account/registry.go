@@ -8,6 +8,7 @@ var (
 	authTypes      = map[string]int{}
 	authRegistry   = map[string]reflect.Type{}
 	clientRegistry = map[string]reflect.Type{}
+	colorRegistry = map[string]string{}
 	handlers       = []func(){}
 )
 
