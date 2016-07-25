@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	google = "google"
+	google      = "google"
+	googleColor = "#338620"
 )
 
 var (
@@ -123,6 +124,12 @@ func googleInit() {
 		},
 	}
 	googleConf.Config()
+
+	color := config.Config.Google.Color
+	if color == "" {
+		color = googleColor
+	}
+	account.RegisterColor(google, color)
 }
 
 func init() {

@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	slack = "slack"
+	slack      = "slack"
+	slackColor = "#00ccff"
 )
 
 var (
@@ -197,6 +198,12 @@ func slackInit() {
 		},
 	}
 	slackConf.Config()
+
+	color := config.Config.Slack.Color
+	if color == "" {
+		color = slackColor
+	}
+	account.RegisterColor(slack, color)
 }
 
 func init() {
