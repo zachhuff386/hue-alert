@@ -30,7 +30,7 @@ func (a *Alert) runner() (err error) {
 		Brightness: a.Brightness,
 	}
 	defer func() {
-		if a.notf != nil {
+		if !a.interrupt && a.notf != nil {
 			a.notf.Stop()
 		}
 	}()

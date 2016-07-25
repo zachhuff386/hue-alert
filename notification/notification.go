@@ -121,6 +121,11 @@ func (n *Notification) runner() (err error) {
 				reset()
 			}
 			time.Sleep(50 * time.Millisecond)
+
+			if n.interrupt {
+				return
+			}
+
 			continue
 		} else if n.Mode == constants.Solid {
 			orig = false
