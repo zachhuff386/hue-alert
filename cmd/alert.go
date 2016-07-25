@@ -32,16 +32,12 @@ func Start() (err error) {
 		Brightness: config.Config.Brightness,
 	}
 
-	sig := make(chan os.Signal, 1)
-	signal.Notify(sig, os.Interrupt)
-	signal.Notify(sig, syscall.SIGTERM)
-	go func() {
-		<-sig
-		alrt.Stop()
-		os.Exit(1)
-	}()
+	go alrt.Run()
 
-	alrt.Run()
+	sig := make(chan os.Signal, 2)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+	<-sig
+	alrt.Stop()
 
 	return
 }
