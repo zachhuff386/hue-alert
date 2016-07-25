@@ -34,10 +34,12 @@ type ConfigData struct {
 	Brightness int      `json:"brightness"`
 	UpdateRate int      `json:"update_rate"`
 	Google     struct {
+		Color        string `json:"color"`
 		ClientId     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"google"`
 	Slack struct {
+		Color        string `json:"color"`
 		ClientId     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"slack"`
