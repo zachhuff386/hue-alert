@@ -8,7 +8,7 @@ var (
 	authTypes      = map[string]int{}
 	authRegistry   = map[string]reflect.Type{}
 	clientRegistry = map[string]reflect.Type{}
-	colorRegistry = map[string]string{}
+	colorRegistry  = map[string]string{}
 	handlers       = []func(){}
 )
 
@@ -19,6 +19,10 @@ func Register(name string, typ int, auth interface{},
 	authRegistry[name] = reflect.TypeOf(auth)
 	clientRegistry[name] = reflect.TypeOf(client)
 	handlers = append(handlers, handler)
+}
+
+func RegisterColor(name, color string) {
+	colorRegistry[name] = color
 }
 
 func InitAccounts() {
