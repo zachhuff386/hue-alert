@@ -88,17 +88,9 @@ func (a *Alert) runner() (err error) {
 			}
 
 			if acct.Alert {
-				color := ""
-
-				if acct.Type == "google" {
-					color = "#338620"
-				} else {
-					color = "#00ccff"
-				}
-
 				alrt := notification.Alert{
 					Type:  acct.Type,
-					Color: color,
+					Color: acct.GetColor(),
 				}
 				alerts[acct.Id] = alrt
 				a.notf.AddAlert(alrt)
