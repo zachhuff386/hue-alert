@@ -45,7 +45,7 @@ type lightData struct {
 		Alert       string    `json:"alert"`
 		Effect      string    `json:"effect"`
 		Mode        string    `json:"colormode"`
-		Reachable   bool      `json:"reachabe"`
+		Reachable   bool      `json:"reachable"`
 	} `json:"state"`
 	Type     string `json:"type"`
 	Name     string `json:"name"`
